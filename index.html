@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open Stacks Public Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;1,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+/* Task 1: Basic Page Styling & Global CSS Variables */
+:root {
+  --paper: #f1ead6;
+  --paper-alt: #e8dfc4;
+  --card: #fbf8ef;
+  --ink: #201d16;
+  --ink-soft: #5a5140;
+  --line: #d8cba5;
+
+  --forest: #1f3d33;
+  --forest-deep: #16281f;
+  --forest-tint: #e4ece7;
+
+  --brass: #a9782c;
+  --brass-light: #d49e47;
+
+  --radius-card: 6px;
+  --radius-tag: 999px;
+
+  --serif: "Newsreader", Georgia, serif;
+  --sans: "Work Sans", -apple-system, "Segoe UI", sans-serif;
+}
+
+* { 
+  box-sizing: border-box; 
+}
+
+html { 
+  scroll-behavior: smooth; 
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+a { 
+  color: inherit; 
+  text-decoration: none; 
+  cursor: pointer; 
+}
+
+/* Task 2: Header & Footer Styling */
+.site-header {
+  background-color: var(--forest);
+  color: var(--paper);
+  padding: 16px 24px;
+  border-bottom: 2px solid var(--brass);
+}
+
+.site-footer {
+  background-color: var(--forest-deep);
+  color: var(--paper-alt);
+  padding: 40px 24px;
+  margin-top: 60px;
+  border-top: 3px solid var(--brass);
+}
+
+.footer-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.footer-brand h3 { 
+  font-family: var(--serif); 
+  color: #ffffff; 
+  margin: 0 0 8px; 
+  font-size: 1.3rem; 
+}
+
+.footer-brand p { 
+  margin: 0; 
+  font-size: 0.9rem; 
+  max-width: 320px; 
+}
+
+/* Task 3: Horizontal Navigation Bar */
+
+.brand { 
+  display: flex; 
+  flex-direction: column; 
+  cursor: pointer; 
+}
+
+.brand-mark { 
+  font-family: var(--serif); 
+  font-size: 1.5rem; 
+  font-weight: 600; 
+  color: #ffffff; 
+}
+
+.brand-tag { 
+  font-size: 0.75rem; 
+  text-transform: uppercase; 
+  letter-spacing: 0.08em; 
+  color: var(--brass-light); 
+}
+
+
+
+
+.nav-cta {
+  background-color: var(--brass);
+  padding: 6px 14px;
+  border-radius: var(--radius-card);
+  color: #ffffff !important;
+  opacity: 1;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.nav-cta:hover {
+  background-color: var(--brass-light);
+}
+
+/* Task 4: Card Component & Shadows */
+.genre-card {
+  background-color: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 24px 16px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--forest-deep);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+}
+
+.genre-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--brass);
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.auth-prompt {
+  background-color: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 40px;
+  text-align: center;
+  max-width: 480px;
+  margin: 40px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.auth-prompt h2 { 
+  font-family: var(--serif); 
+  color: var(--forest-deep); 
+  margin: 0 0 12px; 
+}
+
+.auth-prompt p { 
+  color: var(--ink-soft); 
+  margin-bottom: 24px; 
+}
+
+.auth-prompt input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background-color: var(--paper-alt);
+}
+
+/* Container & Layout */
+
+.page-section { 
+  display: none; 
+}
+
+.page-section.active { 
+  display: block; 
+}
+
+.page-head { 
+  margin-bottom: 32px; 
+}
+
+.page-head h1 { 
+  font-family: var(--serif); 
+  font-size: 2.2rem; 
+  margin: 0 0 8px; 
+  color: var(--forest-deep); 
+}
+
+.page-head p { 
+  margin: 0; 
+  color: var(--ink-soft); 
+  font-size: 1.05rem; 
+}
+
+/* Hero Section Banner */
+.hero-quote-banner {
+  position: relative;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  margin-bottom: 40px;
+  background: linear-gradient(rgba(15, 28, 22, 0.45), rgba(15, 28, 22, 0.65)),
+              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400"><rect width="800" height="400" fill="%232b1810"/><rect x="0" y="120" width="800" height="18" fill="%236e3c1b"/><rect x="0" y="270" width="800" height="18" fill="%236e3c1b"/><rect x="20" y="20" width="35" height="100" fill="%23c0392b"/><rect x="60" y="30" width="28" height="90" fill="%2327ae60"/><rect x="92" y="15" width="40" height="105" fill="%23f1c40f"/><rect x="136" y="35" width="22" height="85" fill="%23e67e22"/><rect x="162" y="25" width="38" height="95" fill="%2316a085"/><rect x="204" y="40" width="30" height="80" fill="%23e74c3c"/><rect x="238" y="10" width="45" height="110" fill="%238e44ad"/><rect x="287" y="30" width="25" height="90" fill="%23f39c12"/><rect x="316" y="20" width="36" height="100" fill="%232980b9"/><rect x="356" y="35" width="20" height="85" fill="%23d35400"/><rect x="380" y="15" width="42" height="105" fill="%232c3e50"/><rect x="426" y="25" width="32" height="95" fill="%2327ae60"/><rect x="462" y="30" width="28" height="90" fill="%23f1c40f"/><rect x="494" y="10" width="40" height="110" fill="%23c0392b"/><rect x="538" y="35" width="24" height="85" fill="%2316a085"/><rect x="566" y="20" width="36" height="100" fill="%238e44ad"/><rect x="606" y="25" width="30" height="95" fill="%23f39c12"/><rect x="640" y="15" width="44" height="105" fill="%232980b9"/><rect x="688" y="30" width="26" height="90" fill="%23e74c3c"/><rect x="718" y="20" width="38" height="100" fill="%2327ae60"/><rect x="760" y="35" width="22" height="85" fill="%23e67e22"/><rect x="30" y="150" width="40" height="120" fill="%23f1c40f"/><rect x="74" y="165" width="26" height="105" fill="%2316a085"/><rect x="104" y="140" width="45" height="130" fill="%23c0392b"/><rect x="153" y="160" width="30" height="110" fill="%2327ae60"/><rect x="187" y="155" width="35" height="115" fill="%238e44ad"/><rect x="226" y="170" width="22" height="100" fill="%23f39c12"/><rect x="252" y="145" width="42" height="125" fill="%232c3e50"/><rect x="298" y="160" width="28" height="110" fill="%23d35400"/><rect x="330" y="150" width="38" height="120" fill="%232980b9"/><rect x="372" y="165" width="24" height="105" fill="%2327ae60"/><rect x="400" y="140" width="46" height="130" fill="%23f1c40f"/><rect x="450" y="155" width="32" height="115" fill="%238e44ad"/><rect x="486" y="170" width="20" height="100" fill="%23e74c3c"/><rect x="510" y="145" width="40" height="125" fill="%2316a085"/><rect x="554" y="160" width="34" height="110" fill="%2327ae60"/><rect x="592" y="150" width="36" height="120" fill="%23f39c12"/><rect x="632" y="165" width="25" height="105" fill="%232c3e50"/><rect x="661" y="140" width="43" height="130" fill="%23c0392b"/><rect x="708" y="155" width="30" height="115" fill="%232980b9"/><rect x="742" y="160" width="38" height="110" fill="%2327ae60"/></svg>') center/cover no-repeat;
+  color: #ffffff;
+  padding: 88px 32px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  border: 2px solid var(--brass);
+}
+
+.hero-quote-banner blockquote {
+  font-family: var(--serif);
+  font-size: 2.1rem;
+  line-height: 1.4;
+  font-style: italic;
+  max-width: 800px;
+  margin: 0 auto 16px;
+  text-shadow: 0 3px 6px rgba(0,0,0,0.85);
+}
+
+.hero-quote-banner cite {
+  display: block;
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffe082;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+}
+
+/* Grid Layout */
+.section-title {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  color: var(--forest-deep);
+  margin-bottom: 20px;
+}
+
+
+/* Controls Bar */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.search-input {
+  background-color: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 10px 14px;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  width: 100%;
+  max-width: 320px;
+  color: var(--ink);
+}
+
+.search-input:focus { 
+  outline: 2px solid var(--forest); 
+}
+
+.genre-chips { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 8px; 
+}
+
+.chip {
+  background-color: var(--paper-alt);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-tag);
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.chip[aria-pressed="true"] {
+  background-color: var(--forest);
+  color: #ffffff;
+  border-color: var(--forest);
+}
+
+/* Task 5 & Tables Styling */
+.table-wrap {
+  background-color: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  overflow-x: auto;
+}
+
+table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  text-align: left; 
+}
+
+th {
+  background-color: var(--paper-alt);
+  padding: 14px 18px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--line);
+}
+
+td { 
+  padding: 14px 18px; 
+  border-bottom: 1px solid var(--line); 
+  font-size: 0.95rem; 
+}
+
+tr:last-child td { 
+  border-bottom: none; 
+}
+
+tr:hover td { 
+  background-color: rgba(31, 61, 51, 0.03); 
+}
+
+.book-title { 
+  font-weight: 600; 
+  font-family: var(--serif); 
+  font-size: 1.05rem; 
+  display: block; 
+}
+
+.book-author { 
+  color: var(--ink-soft); 
+  font-size: 0.88rem; 
+}
+
+.borrows-count { 
+  font-weight: 600; 
+  color: var(--forest-deep); 
+}
+
+/* Status Badges */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--radius-tag);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.badge-available { 
+  background-color: var(--forest-tint); 
+  color: var(--forest-deep); 
+}
+
+.badge-checked { 
+  background-color: #fbeae9; 
+  color: #7a2e2e; 
+}
+
+.badge-overdue { 
+  background-color: #7a2e2e; 
+  color: #ffffff; 
+}
+
+.badge-read { 
+  background-color: #e2e8f0; 
+  color: #334155; 
+}
+
+/* Pagination Controls */
+
+
+
+.page-info { 
+  font-size: 0.9rem; 
+  color: var(--ink-soft); 
+}
+
+/* Task 6: Responsive Design Media Query */
+@media screen and (max-width: 768px) {
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input {
+    max-width: 100%;
+  }
+
+  .hero-quote-banner {
+    padding: 48px 16px;
+  }
+
+  .hero-quote-banner blockquote {
+    font-size: 1.5rem;
+  }
+}
+/* ===== Bootstrap integration ===== */
+.site-header { padding: 12px 24px; }
+.navbar-nav .nav-link { color: var(--paper); opacity: .8; font-weight: 500; font-size: .95rem; cursor: pointer; }
+.navbar-nav .nav-link:hover, .navbar-nav .nav-link.active { opacity: 1; color: var(--brass-light); text-decoration: underline; }
+.navbar .dropdown-menu { background: var(--card); border: 1px solid var(--line); }
+.dropdown-item { color: var(--forest-deep); cursor: pointer; }
+.dropdown-item:hover, .dropdown-item:focus { background: var(--forest-tint); color: var(--forest-deep); }
+.notice-strip { background: var(--brass); color: #fff; font-size: .9rem; }
+.btn-forest { --bs-btn-color:#fff; --bs-btn-bg:var(--forest); --bs-btn-border-color:var(--forest);
+  --bs-btn-hover-color:#fff; --bs-btn-hover-bg:var(--forest-deep); --bs-btn-hover-border-color:var(--forest-deep);
+  --bs-btn-active-color:#fff; --bs-btn-active-bg:var(--forest-deep); --bs-btn-active-border-color:var(--forest-deep); }
+.pagination { --bs-pagination-color:var(--forest); --bs-pagination-bg:var(--card); --bs-pagination-border-color:var(--line);
+  --bs-pagination-hover-color:var(--forest-deep); --bs-pagination-hover-bg:var(--forest-tint);
+  --bs-pagination-focus-color:var(--forest-deep); --bs-pagination-active-bg:var(--forest);
+  --bs-pagination-active-border-color:var(--forest); --bs-pagination-active-color:#fff; }
+.avatar { width: 112px; height: 112px; object-fit: cover; border: 4px solid var(--brass); }
+.glance-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-card); padding: 20px; height: 100%; }
+.glance-card .num { font-family: var(--serif); font-size: 2rem; font-weight: 600; color: var(--forest-deep); line-height: 1.1; }
+.alert { border-radius: var(--radius-card); }
+
+  </style>
+</head>
+<body>
+
+<!-- TASK 3: Responsive navbar with dropdown + search input-group -->
+<nav class="navbar navbar-expand-lg navbar-dark site-header">
+  <div class="container-fluid">
+    <a class="navbar-brand brand" href="#" onclick="switchView('home'); return false;">
+      <span class="brand-mark">Open Stacks</span>
+      <span class="brand-tag">Public Library</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu"
+            aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+        <li class="nav-item"><a class="nav-link active" id="nav-home" href="#" onclick="switchView('home'); return false;">Home</a></li>
+        <li class="nav-item"><a class="nav-link" id="nav-catalogue" href="#" onclick="switchView('catalogue'); return false;">Catalogue</a></li>
+        <li class="nav-item"><a class="nav-link" id="nav-dashboard" href="#" onclick="switchView('dashboard'); return false;">Dashboard</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Genres</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" onclick="filterByGenre('fiction'); return false;">Fiction</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterByGenre('children'); return false;">Children's</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterByGenre('history'); return false;">History / Non-Fiction</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterByGenre('mystery'); return false;">Mystery</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterByGenre('sci-fi'); return false;">Sci-Fi</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#" onclick="filterByGenre('all'); return false;">All genres</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <div class="d-flex flex-column flex-lg-row gap-2">
+        <form class="input-group" role="search" onsubmit="globalSearch(event)">
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+          <input type="search" id="navSearch" class="form-control" placeholder="Search title or author..." aria-label="Search the catalogue">
+          <button class="btn btn-outline-light" type="submit">Search</button>
+        </form>
+        <button class="btn nav-cta text-nowrap" id="authBtn" type="button" onclick="toggleAuth()">Sign in</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- TASK 1: .container-fluid (full width) strip -->
+<div class="container-fluid notice-strip text-center py-2">
+  Open daily 9 AM to 8 PM. Library cards are free for all residents.
+</div>
+
+<!-- TASK 1: .container (fixed max-width per breakpoint) -->
+<main class="container py-4 py-md-5">
+
+  <!-- HOME VIEW -->
+  <section id="view-home" class="page-section active">
+    <div class="hero-quote-banner">
+      <blockquote>“A library is not a luxury but one of the necessities of life.”</blockquote>
+      <cite>— Henry Ward Beecher</cite>
+    </div>
+
+    <!-- TASK 5: dismissible alert -->
+    <div class="alert alert-info alert-dismissible fade show mb-4" role="alert">
+      <strong>New this month:</strong> browse the catalogue by genre or search by title and author.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- TASK 2: responsive grid, side by side on desktop, stacked on mobile -->
+    <h2 class="section-title">Explore by Genre</h2>
+    <div class="row g-3 mb-5">
+      <div class="col-md-4 col-sm-12"><div class="genre-card" onclick="filterByGenre('fiction')">Fiction</div></div>
+      <div class="col-md-4 col-sm-12"><div class="genre-card" onclick="filterByGenre('children')">Children's</div></div>
+      <div class="col-md-4 col-sm-12"><div class="genre-card" onclick="filterByGenre('history')">History / Non-Fiction</div></div>
+      <div class="col-md-4 col-sm-12"><div class="genre-card" onclick="filterByGenre('mystery')">Mystery</div></div>
+      <div class="col-md-4 col-sm-12"><div class="genre-card" onclick="filterByGenre('sci-fi')">Sci-Fi</div></div>
+    </div>
+
+    <h2 class="section-title">The Library at a Glance</h2>
+    <div class="row g-3">
+      <div class="col-md-4 col-sm-12"><div class="glance-card"><div class="num" id="statBooks">0</div><p class="mb-0 text-secondary">titles in the catalogue</p></div></div>
+      <div class="col-md-4 col-sm-12"><div class="glance-card"><div class="num" id="statAvail">0</div><p class="mb-0 text-secondary">on the shelf right now</p></div></div>
+      <div class="col-md-4 col-sm-12"><div class="glance-card"><div class="num">14 days</div><p class="mb-0 text-secondary">standard loan period</p></div></div>
+    </div>
+  </section>
+
+  <!-- CATALOGUE VIEW -->
+  <section id="view-catalogue" class="page-section">
+    <div class="page-head">
+      <h1>Library Catalogue</h1>
+      <p>Explore top borrowed books and check current shelf availability.</p>
+    </div>
+
+    <div class="controls">
+      <input type="search" id="searchBox" class="form-control search-input" placeholder="Search title or author...">
+      <div class="genre-chips">
+        <button class="chip" data-genre="all" aria-pressed="true">All Genres</button>
+        <button class="chip" data-genre="fiction" aria-pressed="false">Fiction</button>
+        <button class="chip" data-genre="children" aria-pressed="false">Children's</button>
+        <button class="chip" data-genre="history" aria-pressed="false">History/Non-Fiction</button>
+        <button class="chip" data-genre="mystery" aria-pressed="false">Mystery</button>
+        <button class="chip" data-genre="sci-fi" aria-pressed="false">Sci-Fi</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title &amp; Author</th>
+            <th>Genre</th>
+            <th>Total Borrows</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="catalogTable"></tbody>
+      </table>
+    </div>
+
+    <!-- TASK 5: Bootstrap pagination -->
+    <nav class="mt-4" aria-label="Catalogue pages">
+      <ul class="pagination justify-content-center flex-wrap mb-2" id="pagination"></ul>
+      <p id="pageInfo" class="page-info text-center mb-0"></p>
+    </nav>
+  </section>
+
+  <!-- DASHBOARD VIEW -->
+  <section id="view-dashboard" class="page-section">
+    <div id="dash-auth-prompt" class="auth-prompt">
+      <h2>Member Sign In</h2>
+      <p>Please sign in to view your borrowed items, past reading history, and loan statuses.</p>
+      <input type="email" class="form-control" placeholder="Email address" value="reader@example.com" aria-label="Email address">
+      <input type="password" class="form-control" placeholder="Password" value="password123" aria-label="Password">
+      <button class="btn btn-forest w-100 mt-2" type="button" onclick="simulateLogin()">Sign In to Dashboard</button>
+    </div>
+
+    <div id="dash-content" style="display: none;">
+      <!-- TASK 4: circular avatar using .rounded-circle + .img-fluid -->
+      <div class="row align-items-center g-3 mb-4">
+        <div class="col-auto">
+          <img class="rounded-circle img-fluid avatar" alt="Member avatar, initials RR"
+               src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><rect width='160' height='160' fill='%231f3d33'/><text x='50%25' y='54%25' font-family='Georgia,serif' font-size='64' fill='%23f1ead6' text-anchor='middle' dominant-baseline='middle'>RR</text></svg>">
+        </div>
+        <div class="col">
+          <div class="page-head mb-0">
+            <h1>Member Dashboard</h1>
+            <p>Welcome back! Overview of your active loans, reading history, and activity status.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="alertArea"></div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Title &amp; Author</th>
+              <th>Borrowed Date</th>
+              <th>Due / Returned Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="book-title">1984</span><span class="book-author">George Orwell</span></td>
+              <td>May 10, 2026</td>
+              <td>May 24, 2026</td>
+              <td><span class="badge badge-overdue">Delayed / Overdue</span></td>
+            </tr>
+            <tr>
+              <td><span class="book-title">Charlotte's Web</span><span class="book-author">E.B. White</span></td>
+              <td>May 18, 2026</td>
+              <td>June 01, 2026</td>
+              <td><span class="badge badge-checked">Active Loan</span></td>
+            </tr>
+            <tr>
+              <td><span class="book-title">The Great Gatsby</span><span class="book-author">F. Scott Fitzgerald</span></td>
+              <td>April 02, 2026</td>
+              <td>April 16, 2026</td>
+              <td><span class="badge badge-read">Returned</span></td>
+            </tr>
+            <tr>
+              <td><span class="book-title">To Kill a Mockingbird</span><span class="book-author">Harper Lee</span></td>
+              <td>February 11, 2026</td>
+              <td>February 25, 2026</td>
+              <td><span class="badge badge-read">Read in Past</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-content">
+    <div class="footer-brand">
+      <h3>Open Stacks Library</h3>
+      <p>A community library dedicated to public access, learning, and literature.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const BOOKS = [
+    { title: "The Snowy Day", author: "Ezra Jack Keats", genre: "children", genreLabel: "Children's", borrows: 485583, status: "Available" },
+    { title: "The Cat in the Hat", author: "Dr. Seuss", genre: "children", genreLabel: "Children's", borrows: 469650, status: "Available" },
+    { title: "1984", author: "George Orwell", genre: "fiction", genreLabel: "Fiction", borrows: 441770, status: "Checked out" },
+    { title: "Where the Wild Things Are", author: "Maurice Sendak", genre: "children", genreLabel: "Children's", borrows: 436016, status: "Available" },
+    { title: "To Kill a Mockingbird", author: "Harper Lee", genre: "fiction", genreLabel: "Fiction", borrows: 422912, status: "Available" },
+    { title: "Charlotte's Web", author: "E.B. White", genre: "children", genreLabel: "Children's", borrows: 337948, status: "Checked out" },
+    { title: "Fahrenheit 451", author: "Ray Bradbury", genre: "fiction", genreLabel: "Fiction", borrows: 316404, status: "Available" },
+    { title: "How to Win Friends & Influence People", author: "Dale Carnegie", genre: "history", genreLabel: "Non-Fiction", borrows: 284524, status: "Available" },
+    { title: "Harry Potter & the Sorcerer's Stone", author: "J.K. Rowling", genre: "children", genreLabel: "Children's", borrows: 231022, status: "Available" },
+    { title: "The Very Hungry Caterpillar", author: "Eric Carle", genre: "children", genreLabel: "Children's", borrows: 189550, status: "Checked out" },
+    { title: "Goodnight Moon", author: "Margaret Wise Brown", genre: "children", genreLabel: "Children's", borrows: 125000, status: "Available" },
+    { title: "The Great Gatsby", author: "F. Scott Fitzgerald", genre: "fiction", genreLabel: "Fiction", borrows: 112400, status: "Available" },
+    { title: "The Catcher in the Rye", author: "J.D. Salinger", genre: "fiction", genreLabel: "Fiction", borrows: 98300, status: "Checked out" },
+    { title: "The Hound of the Baskervilles", author: "Arthur Conan Doyle", genre: "mystery", genreLabel: "Mystery", borrows: 96200, status: "Available" },
+    { title: "The Hobbit", author: "J.R.R. Tolkien", genre: "fiction", genreLabel: "Fiction", borrows: 94100, status: "Available" },
+    { title: "Pride and Prejudice", author: "Jane Austen", genre: "fiction", genreLabel: "Fiction", borrows: 89200, status: "Available" },
+    { title: "Dune", author: "Frank Herbert", genre: "sci-fi", genreLabel: "Sci-Fi", borrows: 85400, status: "Checked out" },
+    { title: "Lord of the Flies", author: "William Golding", genre: "fiction", genreLabel: "Fiction", borrows: 83500, status: "Checked out" },
+    { title: "Murder on the Orient Express", author: "Agatha Christie", genre: "mystery", genreLabel: "Mystery", borrows: 79400, status: "Available" },
+    { title: "Matilda", author: "Roald Dahl", genre: "children", genreLabel: "Children's", borrows: 72100, status: "Available" },
+    { title: "The Da Vinci Code", author: "Dan Brown", genre: "mystery", genreLabel: "Mystery", borrows: 68400, status: "Checked out" },
+    { title: "And Then There Were None", author: "Agatha Christie", genre: "mystery", genreLabel: "Mystery", borrows: 64100, status: "Available" },
+    { title: "The Giving Tree", author: "Shel Silverstein", genre: "children", genreLabel: "Children's", borrows: 61200, status: "Available" },
+    { title: "Neuromancer", author: "William Gibson", genre: "sci-fi", genreLabel: "Sci-Fi", borrows: 59100, status: "Available" },
+    { title: "Sapiens: A Brief History of Humankind", author: "Yuval Noah Harari", genre: "history", genreLabel: "Non-Fiction", borrows: 58400, status: "Available" },
+    { title: "A Study in Scarlet", author: "Arthur Conan Doyle", genre: "mystery", genreLabel: "Mystery", borrows: 56800, status: "Available" },
+    { title: "Charlie and the Chocolate Factory", author: "Roald Dahl", genre: "children", genreLabel: "Children's", borrows: 55200, status: "Checked out" },
+    { title: "The Girl with the Dragon Tattoo", author: "Stieg Larsson", genre: "mystery", genreLabel: "Mystery", borrows: 54300, status: "Checked out" },
+    { title: "Foundation", author: "Isaac Asimov", genre: "sci-fi", genreLabel: "Sci-Fi", borrows: 52100, status: "Available" },
+    { title: "The Murder of Roger Ackroyd", author: "Agatha Christie", genre: "mystery", genreLabel: "Mystery", borrows: 51200, status: "Available" },
+    { title: "The BFG", author: "Roald Dahl", genre: "children", genreLabel: "Children's", borrows: 50400, status: "Available" },
+    { title: "The Silent Patient", author: "Alex Michaelides", genre: "mystery", genreLabel: "Mystery", borrows: 49800, status: "Available" },
+    { title: "Tender Is the Night", author: "F. Scott Fitzgerald", genre: "fiction", genreLabel: "Fiction", borrows: 48900, status: "Checked out" },
+    { title: "Brave New World", author: "Aldous Huxley", genre: "sci-fi", genreLabel: "Sci-Fi", borrows: 47200, status: "Checked out" },
+    { title: "Educated", author: "Tara Westover", genre: "history", genreLabel: "Non-Fiction", borrows: 45100, status: "Available" },
+    { title: "The Sign of the Four", author: "Arthur Conan Doyle", genre: "mystery", genreLabel: "Mystery", borrows: 44200, status: "Available" },
+    { title: "This Side of Paradise", author: "F. Scott Fitzgerald", genre: "fiction", genreLabel: "Fiction", borrows: 42800, status: "Available" },
+    { title: "Do Androids Dream of Electric Sheep?", author: "Philip K. Dick", genre: "sci-fi", genreLabel: "Sci-Fi", borrows: 41200, status: "Checked out" },
+    { title: "Becoming", author: "Michelle Obama", genre: "history", genreLabel: "Non-Fiction", borrows: 39800, status: "Available" },
+    { title: "James and the Giant Peach", author: "Roald Dahl", genre: "children", genreLabel: "Children's", borrows: 38900, status: "Available" },
+    { title: "The Big Sleep", author: "Raymond Chandler", genre: "mystery", genreLabel: "Mystery", borrows: 38400, status: "Available" },
+    { title: "The Beautiful and Damned", author: "F. Scott Fitzgerald", genre: "fiction", genreLabel: "Fiction", borrows: 36700, status: "Available" },
+    { title: "Hyperion", author: "Dan Simmons", genre: "sci-fi", genreLabel: "Sci-Fi", borrows: 35600, status: "Checked out" },
+    { title: "Guns, Germs, and Steel", author: "Jared Diamond", genre: "history", genreLabel: "Non-Fiction", borrows: 34200, status: "Available" },
+    { title: "Gone Girl", author: "Gillian Flynn", genre: "mystery", genreLabel: "Mystery", borrows: 32900, status: "Checked out" }
+  ];
+
+  const PAGE_SIZE = 8;
+  let isSignedIn = false;
+  let currentPage = 1;
+  let activeGenre = 'all';
+  let filtered = [...BOOKS];
+
+  function id(name) { return document.getElementById(name); }
+
+  const tableBody = id('catalogTable');
+  const searchBox = id('searchBox');
+  const pageInfo = id('pageInfo');
+  const chips = document.querySelectorAll('.chip');
+
+  function closeMenu() {
+    const menu = id('navMenu');
+    if (menu.classList.contains('show')) bootstrap.Collapse.getOrCreateInstance(menu).hide();
+  }
+
+  function switchView(viewName) {
+    document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.navbar-nav .nav-link').forEach(n => n.classList.remove('active'));
+    id('view-' + viewName).classList.add('active');
+    const activeNav = id('nav-' + viewName);
+    if (activeNav) activeNav.classList.add('active');
+    closeMenu();
+    window.scrollTo(0, 0);
+  }
+
+  function setGenre(genreKey) {
+    activeGenre = genreKey;
+    chips.forEach(c => c.setAttribute('aria-pressed', c.getAttribute('data-genre') === genreKey ? 'true' : 'false'));
+  }
+
+  function filterByGenre(genreKey) {
+    setGenre(genreKey);
+    searchBox.value = '';
+    switchView('catalogue');
+    applyFilters();
+  }
+
+  function globalSearch(e) {
+    e.preventDefault();
+    setGenre('all');
+    searchBox.value = id('navSearch').value;
+    switchView('catalogue');
+    applyFilters();
+  }
+
+  function showAlerts() {
+    id('alertArea').innerHTML =
+      '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+      '<strong>Signed in.</strong> Your member dashboard is ready.' +
+      '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>' +
+      '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+      '<strong>Overdue:</strong> &ldquo;1984&rdquo; was due on May 24, 2026. Please return it to avoid further fines.' +
+      '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+  }
+
+  function toggleAuth() {
+    if (isSignedIn) {
+      isSignedIn = false;
+      id('authBtn').textContent = 'Sign in';
+      id('dash-auth-prompt').style.display = 'block';
+      id('dash-content').style.display = 'none';
+      id('alertArea').innerHTML = '';
+      switchView('home');
+    } else {
+      switchView('dashboard');
+    }
+  }
+
+  function simulateLogin() {
+    isSignedIn = true;
+    id('authBtn').textContent = 'Sign out';
+    id('dash-auth-prompt').style.display = 'none';
+    id('dash-content').style.display = 'block';
+    showAlerts();
+  }
+
+  function renderPagination(totalPages) {
+    const ul = id('pagination');
+    ul.innerHTML = '';
+    const add = (label, page, disabled, active) => {
+      const li = document.createElement('li');
+      li.className = 'page-item' + (disabled ? ' disabled' : '') + (active ? ' active' : '');
+      const a = document.createElement('a');
+      a.className = 'page-link';
+      a.href = '#';
+      a.textContent = label;
+      if (active) a.setAttribute('aria-current', 'page');
+      if (disabled) a.setAttribute('tabindex', '-1');
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        if (disabled || active) return;
+        currentPage = page;
+        renderTable();
+      });
+      li.appendChild(a);
+      ul.appendChild(li);
+    };
+    add('Previous', currentPage - 1, currentPage <= 1, false);
+    for (let p = 1; p <= totalPages; p++) add(String(p), p, false, p === currentPage);
+    add('Next', currentPage + 1, currentPage >= totalPages, false);
+  }
+
+  function renderTable() {
+    tableBody.innerHTML = '';
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageItems = filtered.slice(start, start + PAGE_SIZE);
+
+    if (pageItems.length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:32px;">No books found. Try a different title, author or genre.</td></tr>';
+    } else {
+      pageItems.forEach((book, idx) => {
+        const tr = document.createElement('tr');
+        const badgeClass = book.status === 'Available' ? 'badge-available' : 'badge-checked';
+        tr.innerHTML =
+          '<td><strong>' + (start + idx + 1) + '</strong></td>' +
+          '<td><span class="book-title">' + book.title + '</span><span class="book-author">' + book.author + '</span></td>' +
+          '<td>' + book.genreLabel + '</td>' +
+          '<td><span class="borrows-count">' + book.borrows.toLocaleString() + '</span></td>' +
+          '<td><span class="badge ' + badgeClass + '">' + book.status + '</span></td>';
+        tableBody.appendChild(tr);
+      });
+    }
+
+    pageInfo.textContent = filtered.length
+      ? 'Page ' + currentPage + ' of ' + totalPages + ' (' + filtered.length + ' books)'
+      : 'No results';
+    renderPagination(filtered.length ? totalPages : 1);
+  }
+
+  function applyFilters() {
+    const q = searchBox.value.toLowerCase().trim();
+    filtered = BOOKS.filter(b => {
+      const matchGenre = activeGenre === 'all' || b.genre === activeGenre;
+      const matchQuery = !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q);
+      return matchGenre && matchQuery;
+    });
+    currentPage = 1;
+    renderTable();
+  }
+
+  chips.forEach(chip => chip.addEventListener('click', () => {
+    setGenre(chip.getAttribute('data-genre'));
+    applyFilters();
+  }));
+  searchBox.addEventListener('input', applyFilters);
+
+  id('statBooks').textContent = BOOKS.length;
+  id('statAvail').textContent = BOOKS.filter(b => b.status === 'Available').length;
+  renderTable();
+</script>
+
+</body>
+</html>
